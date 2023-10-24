@@ -6,9 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
+
 import org.springframework.stereotype.Service;
 
 import com.poc.task1.entites.Employee;
@@ -27,7 +25,7 @@ public class EmployeeImpl implements EmployeeService {
 	private ModelMapper modelMapper;
 	
 	@Override
-@Cacheable(value = "Employees", key = "#employeeDto.empName + '-' + #employeeDto.empEmail")
+
 public EmployeeDto createEmployee(EmployeeDto employeeDto)  {
     Employee employee = dtoToEmployee(employeeDto);
     Employee savedEmployee = employeeRepository.save(employee);
@@ -37,7 +35,7 @@ public EmployeeDto createEmployee(EmployeeDto employeeDto)  {
 
 
 @Override
-@CachePut(value = "Employees", key = "#employeeDto.empName + '-' + #employeeDto.empEmail")
+
 public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long empId) {
     Employee employee = this.employeeRepository.findById(empId).orElseThrow(() -> new ResourceNotFoundException("user", "id", empId));
     employee.setEmpName(employeeDto.getEmpName());
@@ -54,8 +52,8 @@ public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long empId) {
 
 
 	@Override
-	@CachePut(value = "Employees",key="#empId")
-	public EmployeeDto getEmployeeById(Long empId) {
+	
+		public EmployeeDto getEmployeeById(Long empId) {
 		Employee employee = this.employeeRepository.findById(empId).orElseThrow(() -> new ResourceNotFoundException("user", "id", empId));
 			EmployeeDto employeeDto = this.employeeToDto(employee);
 			System.out.println("Employee get successfully"+employeeDto.getId());
@@ -65,7 +63,6 @@ public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long empId) {
 
 
 	@Override
-	@CacheEvict(value="Employees",key="#empId")
 	public void deleteEmployeeById(Long empId) {
 		Employee employee = this.employeeRepository.findById(empId).orElseThrow(() -> new ResourceNotFoundException("user", "id", empId));
 
@@ -76,7 +73,7 @@ public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long empId) {
 
 
 	@Override
-	@Cachable(value="Employees",key="#EmployeeDto.id")
+// @CachePut(value = "Employees")
 	public List<EmployeeDto> getAllEmployee() {
 		List<Employee> employees = this.employeeRepository.findAll();
 		List <EmployeeDto>employeeDtos= employees.stream().map(employee->this.employeeToDto(employee)).collect(Collectors.toList());
@@ -88,7 +85,7 @@ public EmployeeDto updateEmployee(EmployeeDto employeeDto, Long empId) {
 
 
 	@Override
-	@CachePut(value="Employees",key="#deptId")
+	// @CachePut(value="Employees",key="#deptId")
      public List<EmployeeDto> getEmployeeByDeptId(Long deptId) {
     List<Employee> employees = this.employeeRepository.findByDeptId(deptId);
     
